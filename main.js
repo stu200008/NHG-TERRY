@@ -53,8 +53,7 @@ class MainController extends Controller {
 
             let page = this.page + 1;
             let url = this.makeURL(page);
-            let res = await fetch(url);
-            let text = await res.text();
+            let text = await this.fetchPage(url);
             this.page = page;
             let items = this.parseData(text, url);
     
@@ -78,14 +77,22 @@ class MainController extends Controller {
         return this.url.replace('{0}', page + 1);
     }
 
+    async fetchPage(url) {
+        let res = await fetch(url, {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
+            }
+        });
+        return await res.text();
+    }
+
     async reload() {
         this.setState(() => {
             this.data.loading = true;
         });
         try {
             let url = this.makeURL(0);
-            let res = await fetch(url);
-            let text = await res.text();
+            let text = await this.fetchPage(url);
             let items = this.parseData(text, url);
             if (items.length === 0) {
                 throw new Error('No manga items found on the page');
