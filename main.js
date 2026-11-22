@@ -24,8 +24,6 @@ class MainController extends Controller {
             hasMore: true
         };
 
-        this.userAgent = 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Mobile Safari/537.36';
-
         if (cached) {
             let now = new Date().getTime();
             if (now - cached.time > 30 * 60 * 1000) {
@@ -55,11 +53,7 @@ class MainController extends Controller {
 
             let page = this.page + 1;
             let url = this.makeURL(page);
-            let res = await fetch(url, {
-                headers: {
-                    'User-Agent': this.userAgent,
-                }
-            });
+            let res = await fetch(url);
             let text = await res.text();
             this.page = page;
             let items = this.parseData(text, url);
@@ -90,11 +84,7 @@ class MainController extends Controller {
         });
         try {
             let url = this.makeURL(0);
-            let res = await fetch(url, {
-                headers: {
-                    'User-Agent': this.userAgent,
-                }
-            });
+            let res = await fetch(url);
             let text = await res.text();
             let items = this.parseData(text, url);
             if (items.length === 0) {
